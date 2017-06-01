@@ -1,13 +1,17 @@
 package fr.univ_amu.iut.exercice3;
 
 
+import javafx.beans.binding.Binding;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberBinding;
+import javafx.beans.binding.StringExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class TriangleArea {
-
+    StringExpression output;
     private IntegerProperty x1 = new SimpleIntegerProperty(0);
     private IntegerProperty y1 = new SimpleIntegerProperty(0);
 
@@ -26,11 +30,12 @@ public class TriangleArea {
     public static void main(String[] args) {
         TriangleArea triangleArea = new TriangleArea();
 
+
         triangleArea.printResult();
 
-        triangleArea.setP1(0, 1);
-        triangleArea.setP2(6, 0);
-        triangleArea.setP3(4, 3);
+        triangleArea.setP1(0, 0);
+        triangleArea.setP2(1, 0);
+        triangleArea.setP3(0, 1);
 
         triangleArea.printResult();
 
@@ -136,11 +141,34 @@ public class TriangleArea {
         return area;
     }
 
-    void printResult() {
-        throw new RuntimeException("Not yet implemented !");
+    void printResult()   {
+
+        System.out.println(output.get());
+
+
     }
 
     private void createBinding() {
-        throw new RuntimeException("Not yet implemented !");
+        NumberBinding x1y2 = Bindings.multiply(x1, y2);
+        NumberBinding x1y3 = Bindings.multiply(x1, y3);
+
+        NumberBinding x2y3 = Bindings.multiply(x2, y3);
+        NumberBinding x2y1 = Bindings.multiply(x2, y1);
+
+        NumberBinding x3y1 = Bindings.multiply(x3, y1);
+        NumberBinding x3y2 = Bindings.multiply(x3, y2);
+
+        NumberBinding sum = Bindings.add(x1y2, x2y3);
+        NumberBinding sum1 = Bindings.add(sum, x3y1);
+
+        NumberBinding sub = Bindings.subtract(sum1, x1y3);
+        NumberBinding sub1 = Bindings.subtract(sub, x2y1);
+        NumberBinding sub2 = Bindings.subtract(sub1, x3y2);
+
+        NumberBinding val = Bindings.divide(sub2, 2.0);
+
+        area.bind(val);
+        output = Bindings.format("For P1(%d,%d), P2(%d,%d), P3(%d,%d), " + "the area of triangle ABC is %3.1f", x1, y1, x2, y2, x3, y3, area);
+
     }
 }
