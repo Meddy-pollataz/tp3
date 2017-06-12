@@ -2,6 +2,7 @@ package fr.univ_amu.iut.exercice6;
 
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -10,11 +11,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.converter.NumberStringConverter;
 
 public class BidiBindingCircle extends Application {
 
     private Circle c = new Circle();
-    private Slider slider = new Slider();
+    private Slider slider = new Slider(0,250,150);
     private TextField textField = new TextField();
 
     private Pane pane = new Pane();
@@ -43,7 +45,15 @@ public class BidiBindingCircle extends Application {
     }
 
     private void createBindings() {
-        throw new RuntimeException("Not yet implemented !");
+
+        c.centerXProperty().bind(pane.heightProperty().divide(2.0));
+        c.centerYProperty().bind(pane.widthProperty().divide(2.0));
+        c.radiusProperty().bindBidirectional(slider.valueProperty());
+
+        textField.textProperty().bindBidirectional(c.radiusProperty(),new NumberStringConverter());
+        root.getChildren().addAll(c);
+
+
     }
 
     private void configStage(Stage stage) {
@@ -54,7 +64,15 @@ public class BidiBindingCircle extends Application {
     }
 
     private void addSlider() {
-        throw new RuntimeException("Not yet implemented !");
+        pane.getChildren().addAll(slider);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit(125);
+        slider.setShowTickMarks(true);
+        slider.setBlockIncrement(250);
+
+
+
     }
 
     private void addPane() {
